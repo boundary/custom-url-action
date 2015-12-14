@@ -57,6 +57,7 @@ class ActionHandler(BaseHTTPRequestHandler):
         # print("headers: {0}".format(self.headers))
         # print("path: {0}".format(self.path))
         # print("body: {0}".format(body))
+        print("Status: {0}".format(alarm['status']))
 
         affected_servers = alarm['affectedServers']
         if affected_servers is not None:
