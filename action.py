@@ -205,7 +205,7 @@ class ActionHandler(BaseHTTPRequestHandler):
 
 def main():
     address = '0.0.0.0'
-    port = 9080
+    port = 80
     server = HTTPServer((address, port), ActionHandler)
     print("Starting Webhook on {0}:{1}, use <Ctrl-C> to stop".format(address, port))
     server.serve_forever()
