@@ -64,7 +64,7 @@ def main():
     address = '0.0.0.0'
     port = 80
     server = HTTPServer((address, port), ActionHandler)
-    print("Starting ActionHanlder on {0}:{1}, use <Ctrl-C> to stop".format(address, port))
+    print("Starting ActionHandler on {0}:{1}, use <Ctrl-C> to stop".format(address, port))
     server.serve_forever()
 
 
