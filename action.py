@@ -41,10 +41,11 @@ class ActionHandler(BaseHTTPRequestHandler):
         body = self.rfile.read(content_length)
         alarm = json.loads(body)
 
-	# Print out Alarm status
+        # Print out Alarm status
         print("Status: {0}".format(alarm['status']))
 
-        # For each affected server and resolved servers output it's associated test on its status
+        # For each affected server and resolved servers output its
+        # status to syslog on the local server
         affected_servers = alarm['affectedServers']
         if affected_servers is not None:
             for server in affected_servers:
