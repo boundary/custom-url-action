@@ -179,6 +179,14 @@ class ActionHandler(BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
         BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
+    def do_GET(self):
+        self.send_response(urllib2.httplib.OK)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+        # Send the html message
+        self.wfile.write("<!DOCTYPE html><html><head><title>Hello</title></head><body>Hello World!</body>")
+        self.wfile.flush()
+
     def do_POST(self):
         """
         Handles the POST request sent by Boundary Url Action
@@ -192,15 +200,9 @@ class ActionHandler(BaseHTTPRequestHandler):
         print("path: {0}".format(self.path))
         print("body: {0}".format(body))
 
-    def validate_data(self, data):
-        return True
-
     def process_payload(self, json_data):
         data = json.loads(json_data)
         return data
-
-    def handle_action(self, action):
-        print(action)
 
 
 def main():
