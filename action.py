@@ -25,17 +25,6 @@ class ActionHandler(BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server):
         BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
-    def do_GET(self):
-        """
-        Simple Get Method handler so we test connectivity via a web browser
-        """
-        self.send_response(urllib2.httplib.OK)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        # Send the html message
-        self.wfile.write("<!DOCTYPE html><html><head><title>Hello</title></head><body>Hello World!</body>")
-        self.wfile.flush()
-
     def do_POST(self):
         """
         Handles the POST request sent by TrueSight Pulse Url Action
@@ -52,13 +41,10 @@ class ActionHandler(BaseHTTPRequestHandler):
         body = self.rfile.read(content_length)
         alarm = json.loads(body)
 
-        # Write the request contents to standard out
-        # print("Client: {0}".format(str(self.client_address)))
-        # print("headers: {0}".format(self.headers))
-        # print("path: {0}".format(self.path))
-        # print("body: {0}".format(body))
+	# Print out Alarm status
         print("Status: {0}".format(alarm['status']))
 
+        # For each affected server and resolved servers output it's associated test on its status
         affected_servers = alarm['affectedServers']
         if affected_servers is not None:
             for server in affected_servers:
