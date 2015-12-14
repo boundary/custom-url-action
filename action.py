@@ -18,6 +18,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler
 from BaseHTTPServer import HTTPServer
 import json
 import urllib2
+import syslog
 
 
 class ActionHandler(BaseHTTPRequestHandler):
@@ -25,6 +26,9 @@ class ActionHandler(BaseHTTPRequestHandler):
         BaseHTTPRequestHandler.__init__(self, request, client_address, server)
 
     def do_GET(self):
+        """
+        Simple Get Method handler so we test connectivity via a web browser
+        """
         self.send_response(urllib2.httplib.OK)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
@@ -34,29 +38,46 @@ class ActionHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """
-        Handles the POST request sent by Boundary Url Action
+        Handles the POST request sent by TrueSight Pulse Url Action
         """
+
+        # Send back a 200 result code and html page indicating success
         self.send_response(urllib2.httplib.OK)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
         self.wfile.write("<!DOCTYPE html><html><head><title>Result</title></head><body>SUCCESS</body>")
+
+        # Read the contents which contains a JSON payload
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
-        print("Client: {0}".format(str(self.client_address)))
-        print("headers: {0}".format(self.headers))
-        print("path: {0}".format(self.path))
-        print("body: {0}".format(body))
+        alarm = json.loads(body)
 
-    def process_payload(self, json_data):
-        data = json.loads(json_data)
-        return data
+        # Write the request contents to standard out
+        # print("Client: {0}".format(str(self.client_address)))
+        # print("headers: {0}".format(self.headers))
+        # print("path: {0}".format(self.path))
+        # print("body: {0}".format(body))
+
+        affected_servers = alarm['affectedServers']
+        if affected_servers is not None:
+            for server in affected_servers:
+                alarm_text = affected_servers[server]['text']['labelText']
+                print(alarm_text)
+                syslog.syslog(syslog.LOG_ALERT, alarm_text)
+
+        resolved_servers = alarm['resolvedServers']
+        if resolved_servers is not None:
+            for server in resolved_servers:
+                alarm_text = resolved_servers[server]['text']['labelText']
+                print(alarm_text)
+                syslog.syslog(syslog.LOG_INFO, alarm_text)
 
 
 def main():
     address = '0.0.0.0'
     port = 80
     server = HTTPServer((address, port), ActionHandler)
-    print("Starting Webhook on {0}:{1}, use <Ctrl-C> to stop".format(address, port))
+    print("Starting ActionHanlder on {0}:{1}, use <Ctrl-C> to stop".format(address, port))
     server.serve_forever()
 
 
