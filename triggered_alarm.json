@@ -1,0 +1,29 @@
+{
+  "alarmName": "CPU usage is high",
+  "status": "TRIGGERED",
+  "metric": {
+    "id": "cpu",
+    "name": "CPU utilization",
+    "type": "percent"
+  },
+  "affectedServers": {
+    "alarm-demo-host": {
+      "isSet": true,
+      "hostname": "alarm-demo-host",
+      "aggregate": "avg",
+      "metric": "CPU utilization",
+      "value": 0.8089342040816323,
+      "threshold": 0.8,
+      "time": 1450078707000,
+      "link": "https://premium.boundary.com/8593/server-health?ival=60&marker=1450078707000!cpu",
+      "text": {
+        "isSet": true,
+        "serverName": "alarm-demo-host",
+        "link": "https://premium.boundary.com/8593/server-health?ival=60&marker=1450078707000!cpu",
+        "labelHTML": "Server <strong>alarm-demo-host</strong>'s avg CPU utilization is <strong style=\"color:#900\">80.9%</strong> which is greater than the threshold of 80.0% for 4.2s",
+        "labelText": "Server alarm-demo-host's avg CPU utilization is 80.9% which is greater than the threshold of 80.0% for 4.2s"
+      }
+    }
+  },
+  "resolvedServers": {}
+}
